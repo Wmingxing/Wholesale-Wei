@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Support - My Store</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/support.css">
+    <link rel="stylesheet" href="../css/cart.css">
+</head>
+<body>
+    <!-- 顶部醒目提示：诚信第一，服务至上 -->
+    <div class="integrity-banner">🔥 Integrity First, Service Supreme! Your Trusted Shopping Partner.</div>
+
+    <header>
+        <div class="nav-container" style="max-width: 1400px; margin: 0 auto; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo"><a href="index.html" >MY STORE</a></div>
+            <ul class="nav-links" style="list-style: none; display: flex; gap: 30px; margin: 0; padding: 0;">
+                <li><a href="index.html" >Home</a></li>
+                <li><a href="wig-category.html" >Human Hair Wigs</a></li>
+                <li><a href="grocery.html" >Grocery Wholesale</a></li>
+                <li><a href="support.html" >Customer Support</a></li>
+                <li><a href="best-sellers.html" >Best Sellers</a></li>
+            </ul>
+            <div class="nav-icons">
+                <button class="cart-btn-nav" onclick="toggleCartDrawer()">Cart (<span id="cart-count">0</span>)</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="support-container">
+        <h1 class="support-title">Customer Support Center</h1>
+
+        <!-- 第一部分：购买须知 (Shopping Instructions) -->
+        <div class="support-section">
+          <h2>1. Shopping Instructions & Notice</h2>
+          <div class="support-grid">
+              <div class="support-card">
+                  <img src="../images/notice-1.jpg" alt="Shipping">
+                  <h3>Secure Shipping(The actual shipping cost may vary!)</h3>
+                  <p>All orders are processed and shipped with tracking numbers within 12 hours.</p>
+              </div>
+              <div class="support-card">
+                  <img src="../images/notice-2.jpg" alt="Return">
+                  <h3>Return Policy</h3>
+                  <p>7-day return guarantee for unused items in original package.(Excludes transit time)</p>
+              </div>
+          </div>
+        </div>
+
+        <!-- 第二部分：顾客反馈 (Customer Reviews & Feedback) -->
+        <div class="support-section">
+          <h2>2. Customer Feedback</h2>
+          <div class="support-grid">
+              <div class="support-card">
+                  <img src="../images/feedback-1.jpg" alt="Review">
+                  <h3>"Amazing Quality!"</h3>
+                  <p>— Sarah M. : The lace blends seamlessly and hair is super soft.</p>
+              </div>
+          </div>
+        </div>
+
+        <!-- 第三部分：假发信息与保养 (Wig Care & Info) -->
+        <div class="support-section">
+          <h2>3. Wig Care & Knowledge</h2>
+          <div class="support-grid">
+              <div class="support-card">
+                  <img src="../images/care-1.jpg" alt="Wig Care">
+                  <h3>Proper Washing</h3>
+                  <p>Use lukewarm water and sulfate-free shampoo to extend your wig's lifespan.</p>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2026 MY STORE. All Rights Reserved.</p></footer>
+
+    <div class="cart-drawer-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <span>Your Shopping Cart</span>
+            <button class="close-cart" onclick="toggleCartDrawer()">&times;</button>
+        </div>
+        <div class="cart-items-list" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <!-- 原价小计 -->
+            <div class="cart-total">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" style="text-decoration: line-through; color: #888; font-size: 14px;">$0.00</span>
+            </div>
+        
+            <!-- 💡 阶梯折后价显示区 -->
+            <div class="cart-total discount-row" style="margin-top: 6px;">
+                <span style="font-weight: 800; color: #e63946;">Final Price (Tier Discount):</span>
+                <span id="cart-discounted-price" style="font-weight: 800; color: #e63946; font-size: 18px;">$0.00</span>
+            </div>
+        
+            <!-- 折扣提示标签 -->
+            <div id="cart-discount-notice" style="font-size: 12px; color: #25D366; text-align: right; margin-bottom: 12px; font-weight: 600;">
+                Order $100+ for 4% OFF!
+            </div>
+        
+            <!-- 💡 修改后的 WhatsApp 联系结算按钮 -->
+            <a href="https://wa.me/86111111" target="_blank" class="checkout-btn whatsapp-btn">
+                WhatsApp To Buy :<br>
+                <strong style="font-size: 15px; letter-spacing: 0.5px;">+86 18339686015/+86 17744478917</strong>
+            </a>
+        </div>
+    </div>
+    <script src="../js/database.js"></script>
+    <script src="../js/cart.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results - My Store</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/search.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">MY STORE</a></div>
+            <button class="cart-btn-nav" onclick="toggleCartDrawer()">Cart (<span id="cart-count">0</span>)</button>
+        </div>
+    </header>
+
+    <div class="section-container">
+        <h2>Search Results for "<span id="search-keyword-display"></span>"</h2>
+        <div class="product-grid" id="search-results-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:20px; margin-top:20px;"></div>
+    </div>
+
+    <!-- 购物车抽屉 -->
+    <div class="cart-drawer-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header"><span>Your Shopping Cart</span><button class="close-cart" onclick="toggleCartDrawer()">&times;</button></div>
+        <div class="cart-items-list" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <!-- 原价小计 -->
+            <div class="cart-total">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" style="text-decoration: line-through; color: #888; font-size: 14px;">$0.00</span>
+            </div>
+        
+            <!-- 💡 阶梯折后价显示区 -->
+            <div class="cart-total discount-row" style="margin-top: 6px;">
+                <span style="font-weight: 800; color: #e63946;">Final Price (Tier Discount):</span>
+                <span id="cart-discounted-price" style="font-weight: 800; color: #e63946; font-size: 18px;">$0.00</span>
+            </div>
+        
+            <!-- 折扣提示标签 -->
+            <div id="cart-discount-notice" style="font-size: 12px; color: #25D366; text-align: right; margin-bottom: 12px; font-weight: 600;">
+                Order $100+ for 4% OFF!
+            </div>
+        
+            <!-- 💡 修改后的 WhatsApp 联系结算按钮 -->
+            <a href="https://wa.me/86111111" target="_blank" class="checkout-btn whatsapp-btn">
+                Contact WhatsApp:<br>
+                <strong style="font-size: 15px; letter-spacing: 0.5px;">+86 18339686015/+86 17744478917</strong>
+            </a>
+        </div>
+    </div>
+
+    <script src="../js/database.js"></script>
+    <script src="../js/cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const keyword = (params.get('q') || '').toLowerCase().trim();
+            document.getElementById('search-keyword-display').innerText = keyword;
+
+            const results = getAllProducts().filter(p => p.name.toLowerCase().includes(keyword));
+            const container = document.getElementById('search-results-grid');
+
+            if (results.length === 0) {
+                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">No products found.</p>';
+                return;
+            }
+
+            container.innerHTML = results.map(p => {
+                const sz = p.sizes[0];
+                const link = p.category === 'wig' ? `product.html?id=${p.id}` : `grocery.html?id=${p.id}`;
+                return `
+                    <div class="product-card" style="min-width:auto;">
+                        <div onclick="location.href='${link}'">
+                            <img src="${p.images[0]}" style="width:100%; height:200px; object-fit:contain;">
+                            <div class="product-card-title">${p.name}</div>
+                            <div class="card-price">$${sz.price.toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+</html>

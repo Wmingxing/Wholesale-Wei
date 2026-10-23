@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Detail - My Store</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/product.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    <style>
+        .detail-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .gallery { display: flex; gap: 16px; }
+        .thumbs { display: flex; flex-direction: column; gap: 10px; }
+        .thumbs img { width: 70px; height: 70px; object-fit: cover; cursor: pointer; border: 1px solid #ddd; opacity: 0.6; }
+        .thumbs img.active { border-color: #e63946; opacity: 1; }
+        .main-img img { width: 100%; height: 450px; object-fit: contain; background: #f9f9f9; border: 1px solid #eee; }
+        .size-btn { padding: 10px 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-weight: 600; }
+        .size-btn.active { background: #111; color: #fff; border-color: #111; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">MY STORE</a></div>
+            <button class="cart-btn-nav" onclick="toggleCartDrawer()">Cart (<span id="cart-count">0</span>)</button>
+        </div>
+    </header>
+
+    <div style="max-width:1200px; margin:20px auto 0; padding:0 20px;">
+        <a href="wig-category.html" style="color:#666; text-decoration:none;">← Back to Wigs</a>
+    </div>
+
+    <main class="detail-container">
+        <!-- 左侧图片画廊 -->
+        <div class="gallery">
+            <div class="thumbs" id="thumbs-box"></div>
+            <div class="main-img"><img id="main-image" src=""></div>
+        </div>
+
+        <!-- 右侧信息 -->
+        <div>
+            <h1 id="p-title" style="font-size:24px; font-weight:700; margin-bottom:10px;"></h1>
+            
+            <!-- 假发专属高阶属性：密度与蕾丝面积 -->
+            <div style="background:#f4f4f4; padding:8px 12px; font-size:13px; margin-bottom:15px; border-radius:4px;">
+                <strong>Density:</strong> <span id="p-density"></span> &nbsp;|&nbsp; 
+                <strong>Lace Area:</strong> <span id="p-lace"></span>
+            </div>
+
+            <div style="font-size:30px; font-weight:790; color:#e63946; margin-bottom:15px;">
+                <span id="p-price">$0.00</span> <span id="p-orig" style="font-size:16px; color:#888; text-decoration:line-through; margin-left:10px;">$0.00</span>
+            </div>
+
+            <!-- 重量标签 -->
+            <div style="font-size:13px; color:#555; margin-bottom:15px;">Weight: <span id="p-weight">0.00 kg</span></div>
+
+            <p id="p-desc" style="color:#666; line-height:1.6; margin-bottom:20px;"></p>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:8px;">Select Size:</label>
+                <div id="sizes-box" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; margin-bottom:8px;">Quantity:</label>
+                <input type="number" id="p-qty" value="1" min="1" style="width:80px; padding:8px; text-align:center;">
+            </div>
+
+            <button onclick="handleAddToCart()" style="width:100%; background:#111; color:#fff; border:none; padding:14px; font-weight:700; cursor:pointer;">Add to Cart</button>
+        </div>
+    </main>
+
+    <!-- 购物车抽屉 -->
+    <div class="cart-drawer-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header"><span>Your Shopping Cart</span><button class="close-cart" onclick="toggleCartDrawer()">&times;</button></div>
+        <div class="cart-items-list" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <!-- 原价小计 -->
+            <div class="cart-total">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" style="text-decoration: line-through; color: #888; font-size: 14px;">$0.00</span>
+            </div>
+        
+            <!-- 💡 阶梯折后价显示区 -->
+            <div class="cart-total discount-row" style="margin-top: 6px;">
+                <span style="font-weight: 800; color: #e63946;">Final Price (Tier Discount):</span>
+                <span id="cart-discounted-price" style="font-weight: 800; color: #e63946; font-size: 18px;">$0.00</span>
+            </div>
+        
+            <!-- 折扣提示标签 -->
+            <div id="cart-discount-notice" style="font-size: 12px; color: #25D366; text-align: right; margin-bottom: 12px; font-weight: 600;">
+                Order $100+ for 4% OFF!
+            </div>
+        
+            <!-- 💡 修改后的 WhatsApp 联系结算按钮 -->
+            <a href="https://wa.me/86111111" target="_blank" class="checkout-btn whatsapp-btn">
+                Contact WhatsApp:<br>
+                <strong style="font-size: 15px; letter-spacing: 0.5px;">+86 18339686015/+86 17744478917</strong>
+            </a>
+        </div>
+    </div>
+
+    <script src="../js/database.js"></script>
+    <script src="../js/cart.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const product = getProductById(params.get('id') || 'wigs-1');
+        let selectedSizeIdx = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!product) return;
+
+            document.getElementById('p-title').innerText = product.name;
+            document.getElementById('p-desc').innerText = product.description;
+            document.getElementById('p-density').innerText = product.density;
+            document.getElementById('p-lace').innerText = product.laceArea;
+
+            document.getElementById('main-image').src = product.images[0];
+            document.getElementById('thumbs-box').innerHTML = product.images.map((img, i) => `
+                <img src="${img}" class="${i===0?'active':''}" onclick="switchImg('${img}', ${i})">
+            `).join('');
+
+            document.getElementById('sizes-box').innerHTML = product.sizes.map((sz, i) => `
+                <button onclick="selectSize(${i})" class="size-btn ${i===0?'active':''}">${sz.name}</button>
+            `).join('');
+
+            updateSizeInfo();
+        });
+
+        function switchImg(src, idx) {
+            document.getElementById('main-image').src = src;
+            document.querySelectorAll('.thumbs img').forEach((img, i) => img.classList.toggle('active', i === idx));
+        }
+
+        function selectSize(idx) {
+            selectedSizeIdx = idx;
+            document.querySelectorAll('.size-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+            updateSizeInfo();
+        }
+
+        function updateSizeInfo() {
+            const sz = product.sizes[selectedSizeIdx];
+            document.getElementById('p-price').innerText = `$${sz.price.toFixed(2)}`;
+            document.getElementById('p-orig').innerText = `$${sz.originalPrice.toFixed(2)}`;
+            document.getElementById('p-weight').innerText = sz.weight;
+        }
+
+        function handleAddToCart() {
+            const sz = product.sizes[selectedSizeIdx];
+            const qty = parseInt(document.getElementById('p-qty').value) || 1;
+            addToCart({
+                id: product.id,
+                name: product.name,
+                price: sz.price,
+                size: sz.name,
+                quantity: qty,
+                img: product.images[0]
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Best Sellers - My Store</title>
+    <!-- 引入统一的样式文件 -->
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/support.css">
+    <link rel="stylesheet" href="../css/cart.css">
+</head>
+<body>
+    <!-- 顶部醒目提示：诚信第一，服务至上 -->
+    <div class="integrity-banner">🔥 Integrity First, Service Supreme! Your Trusted Shopping Partner.</div>
+    
+    <!-- 统一导航栏 -->
+    <header>
+        <div class="nav-container" style="max-width: 1400px; margin: 0 auto; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo"><a href="index.html" >MY STORE</a></div>
+            <ul class="nav-links" style="list-style: none; display: flex; gap: 30px; margin: 0; padding: 0;">
+                <li><a href="index.html" >Home</a></li>
+                <li><a href="best-sellers.html" >Best Sellers</a></li>
+                <li><a href="support.html" >Customer Support</a></li>
+            </ul>
+            <div class="nav-icons">
+                <button class="cart-btn-nav" onclick="toggleCartDrawer()">Cart (<span id="cart-count">0</span>)</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 页面主体内容 -->
+    <div style="max-width: 1400px; margin: 40px auto; padding: 0 20px;">
+        <h1 style="text-align: center; font-size: 36px; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px;">Best Sellers</h1>
+        
+        <!-- 畅销商品网格容器 -->
+        <div id="bestseller-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;"></div>
+    </div>
+
+    <!-- 底部版权 -->
+    <footer>
+        <p style="text-align:center; color:#888; padding:40px 0; font-size:13px;">&copy; 2026 MY STORE. All Rights Reserved.</p>
+    </footer>
+
+    <!-- 购物车抽屉组件 -->
+    <div class="cart-drawer-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header"><span>Your Shopping Cart</span><button class="close-cart" onclick="toggleCartDrawer()">&times;</button></div>
+        <div class="cart-items-list" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <!-- 原价小计 -->
+            <div class="cart-total">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" style="text-decoration: line-through; color: #888; font-size: 14px;">$0.00</span>
+            </div>
+        
+            <!-- 💡 阶梯折后价显示区 -->
+            <div class="cart-total discount-row" style="margin-top: 6px;">
+                <span style="font-weight: 800; color: #e63946;">Final Price (Tier Discount):</span>
+                <span id="cart-discounted-price" style="font-weight: 800; color: #e63946; font-size: 18px;">$0.00</span>
+            </div>
+        
+            <!-- 折扣提示标签 -->
+            <div id="cart-discount-notice" style="font-size: 12px; color: #25D366; text-align: right; margin-bottom: 12px; font-weight: 600;">
+                Order $100+ for 4% OFF!
+            </div>
+        
+            <!-- 💡 修改后的 WhatsApp 联系结算按钮 -->
+            <a href="https://wa.me/86111111" target="_blank" class="checkout-btn whatsapp-btn">
+                Contact WhatsApp:<br>
+                <strong style="font-size: 15px; letter-spacing: 0.5px;">+86 18339686015/+86 17744478917</strong>
+            </a>
+        </div>
+    </div>
+
+    <!-- 核心脚本 -->
+    <script src="../js/database.js"></script>
+    <script src="../js/cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 调用 database.js 中集成的 getBestSellers() 函数获取畅销商品
+            const products = typeof getBestSellers === 'function' ? getBestSellers() : [];
+            const container = document.getElementById('bestseller-grid');
+            
+            if (!container) return;
+
+            if (products.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#888; padding:40px;">No best sellers available right now.</p>`;
+                return;
+            }
+
+            container.innerHTML = products.map(p => {
+                const sz = p.sizes && p.sizes.length > 0 ? p.sizes[0] : { price: 0, name: 'Standard' };
+                const imgSrc = p.images && p.images[0] ? p.images[0] : '';
+                return `
+                    <div class="product-card" style="background:#fff; border:1px solid #eee; border-radius:6px; padding:14px; display:flex; flex-direction:column; justify-content:space-between;">
+                        <div onclick="location.href='product.html?id=${p.id}'" style="cursor:pointer;">
+                            <img src="${imgSrc}" alt="${p.name}" style="width:100%; height:220px; object-fit:contain; background:#f9f9f9; border-radius:4px; margin-bottom:10px;">
+                            <div style="font-size:14px; font-weight:600; height:2.8em; overflow:hidden; margin-bottom:8px; color:#222;">${p.name}</div>
+                            <div style="font-size:20px; font-weight:790; color:#e63946; margin-bottom:10px;">$${sz.price.toFixed(2)}</div>
+                        </div>
+                        <button class="add-btn" onclick="addToCart({
+                            id: '${p.id}',
+                            name: '${p.name.replace(/'/g, "\\'")}',
+                            price: ${sz.price},
+                            size: '${sz.name}',
+                            img: '${imgSrc}'
+                        })">Add to Cart</button>
+                    </div>
+                `;
+            }).join('');
+        });
+    </script>
+</body>
+</html>

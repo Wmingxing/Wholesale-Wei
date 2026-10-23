@@ -1,0 +1,18 @@
+.wig-filter-bar { display: flex; justify-content: space-between; margin: 20px 0; align-items: center; flex-wrap: wrap; gap: 10px; }
+.sub-filter-btn { padding: 8px 16px; cursor: pointer; border: 1px solid #ccc; background: #fff; border-radius: 4px; font-weight: 600; }
+.sub-filter-btn:hover { background: #111; color: #fff; border-color: #111; }
+.wig-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.pagination-box { display: flex; justify-content: center; gap: 8px; margin-top: 30px; }
+/* ==================== 假发类目页大标题高奢定制样式 ==================== */
+h2, .category-title, .page-title {
+    font-size: 36px;                 /* 加大字号 */
+    font-weight: 900;                /* 极粗体，彰显大牌质感 */
+    text-align: center;              /* 居中对齐 */
+    text-transform: uppercase;       /* 强制转为全大写，提升国际站高级感 */
+    letter-spacing: 2px;             /* 增加字间距，排版更开阔 */
+    margin: 40px 0 20px 0;           /* 上下留出优雅的呼吸空间 */
+    color: #111;                     /* 默认高级黑 */
+    
+    
+   
+}

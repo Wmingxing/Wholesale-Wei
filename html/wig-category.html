@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Human Hair Wigs - My Store</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/wig-category.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container" style="max-width: 1400px; margin: 0 auto; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo"><a href="index.html" >MY STORE</a></div>
+            <ul class="nav-links" style="list-style: none; display: flex; gap: 30px; margin: 0; padding: 0;">
+                <li><a href="index.html" >Home</a></li>
+                <li><a href="wig-category.html" >Human Hair Wigs</a></li>
+                <li><a href="grocery.html" >Grocery Wholesale</a></li>
+                <li><a href="best-sellers.html" >Best Sellers</a></li>
+                <li><a href="support.html" >Customer Support</a></li>
+            </ul>
+            <div class="nav-icons">
+                <button class="cart-btn-nav" onclick="toggleCartDrawer()" style="background: #111; color: #fff; border: none; padding: 8px 16px; font-weight: 600; font-size: 13px; border-radius: 4px; cursor: pointer;">Cart (<span id="cart-count">0</span>)</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="section-container">
+        <h2 class="wig-collection-title">Human Hair Wigs Collection</h2>
+        
+        <!-- 子类目筛选与局部搜索栏 -->
+        <div style="display:flex; justify-content:space-between; margin:20px 0; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; gap:10px;">
+                <button onclick="filterWigs('all')" style="padding:8px 16px; cursor:pointer;">All Wigs</button>
+                <button onclick="filterWigs('100%')" style="padding:8px 16px; cursor:pointer;">100% Human Hair</button>
+                <button onclick="filterWigs('70%')" style="padding:8px 16px; cursor:pointer;">70% Special Sale</button>
+            </div>
+            <div>
+                <input type="text" id="wig-search-input" placeholder="Search wigs..." oninput="handleWigSearch(this.value)" style="padding:8px; width:220px; border:1px solid #ccc; border-radius:4px;">
+            </div>
+        </div>
+
+        <!-- 商品网格 -->
+        <div id="wig-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:20px;"></div>
+
+        <!-- 分页按钮 -->
+        <div id="pagination-container" style="display:flex; justify-content:center; gap:8px; margin-top:30px;"></div>
+    </div>
+
+    <!-- 购物车抽屉 -->
+    <div class="cart-drawer-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header"><span>Your Shopping Cart</span><button class="close-cart" onclick="toggleCartDrawer()">&times;</button></div>
+        <div class="cart-items-list" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <!-- 原价小计 -->
+            <div class="cart-total">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" style="text-decoration: line-through; color: #888; font-size: 14px;">$0.00</span>
+            </div>
+        
+            <!-- 💡 阶梯折后价显示区 -->
+            <div class="cart-total discount-row" style="margin-top: 6px;">
+                <span style="font-weight: 800; color: #e63946;">Final Price (Tier Discount):</span>
+                <span id="cart-discounted-price" style="font-weight: 800; color: #e63946; font-size: 18px;">$0.00</span>
+            </div>
+        
+            <!-- 折扣提示标签 -->
+            <div id="cart-discount-notice" style="font-size: 12px; color: #25D366; text-align: right; margin-bottom: 12px; font-weight: 600;">
+                Order $100+ for 4% OFF!
+            </div>
+        
+            <!-- 💡 修改后的 WhatsApp 联系结算按钮 -->
+            <a href="https://wa.me/86111111" target="_blank" class="checkout-btn whatsapp-btn">
+                Contact WhatsApp:<br>
+                <strong style="font-size: 15px; letter-spacing: 0.5px;">+86 18339686015/+86 17744478917</strong>
+            </a>
+        </div>
+    </div>
+
+    <script src="../js/database.js"></script>
+    <script src="../js/cart.js"></script>
+    <script>
+        let currentSub = 'all';
+        let currentKeyword = '';
+        let currentPage = 1;
+        const pageSize = 8;
+
+        document.addEventListener('DOMContentLoaded', () => renderWigs());
+
+        function filterWigs(sub) {
+            currentSub = sub;
+            currentPage = 1;
+            renderWigs();
+        }
+
+        function handleWigSearch(val) {
+            currentKeyword = val.trim();
+            currentPage = 1;
+            renderWigs();
+        }
+
+        function renderWigs() {
+            let products = getAllProducts().filter(p => p.category === 'wig');
+
+            if (currentSub !== 'all') {
+                products = products.filter(p => p.subCategory === currentSub);
+            }
+            if (currentKeyword) {
+                products = products.filter(p => p.name.toLowerCase().includes(currentKeyword.toLowerCase()));
+            }
+
+            const totalPages = Math.ceil(products.length / pageSize) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            const sliceData = products.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+            document.getElementById('wig-grid').innerHTML = sliceData.map(p => {
+                const sz = p.sizes[0];
+                return `
+                    <div class="product-card" style="min-width:auto;">
+                        <div onclick="location.href='product.html?id=${p.id}'">
+                            <img src="${p.images[0]}" style="width:100%; height:200px; object-fit:contain;">
+                            <div style="font-size:11px; color:#666;">${p.density} | ${p.laceArea}</div>
+                            <div class="product-card-title">${p.name}</div>
+                            <div class="card-price">$${sz.price.toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            let pagHtml = '';
+            for (let i = 1; i <= totalPages; i++) {
+                pagHtml += `<button onclick="changePage(${i})" style="padding:6px 12px; background:${i === currentPage ? '#111' : '#fff'}; color:${i === currentPage ? '#fff' : '#000'}; border:1px solid #ccc; cursor:pointer;">${i}</button>`;
+            }
+            document.getElementById('pagination-container').innerHTML = pagHtml;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            renderWigs();
+        }
+    </script>
+</body>
+</html>
