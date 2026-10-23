@@ -125,7 +125,6 @@ const productDatabase = {
     density: "Bundle-FTST", // 假发专属属性: 密度
     laceArea: "1/3/4", // 假发专属属性: 蕾丝面积
     images: [
-      "../images/wig-p13/p1.jpg",
       "../images/wig-p13/p2.jpg",
       "../images/wig-p13/p3.jpg",
       "../images/wig-p13/p4.jpg",
