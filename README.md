@@ -1,2 +1,154 @@
-# Wholesale-Wei
-所有商品都是批发价格
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Friday Super Sale - My Store</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/cart.css">
+</head>
+<body>
+
+    <div class="announcement-bar">🔥 BLACK FRIDAY EXCLUSIVE: FREE SHIPPING ON ALL ORDERS OVER $100!</div>
+
+    <!-- 💡 升级后的黑五导航栏 -->
+    <header>
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">MY STORE</a></div>
+            <ul class="nav-links">
+                <li><a href="wig-category.html">Human Hair Wigs</a></li>
+                <li><a href="grocery.html">Grocery Wholesale</a></li>
+                <li><a href="best-sellers.html">Best Sellers</a></li>
+                <li><a href="support.html">Customer Support</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html" style="text-decoration:none; color:#333; font-weight:600; font-size:14px;">Search</a>
+                <button class="cart-btn-nav" onclick="toggleCartDrawer()">Cart (<span id="cart-count">0</span>)</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 💡 新增的黑五视觉大横幅 (Hero Banner) -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <div class="badge-sale">🔥 BLACK FRIDAY SUPER SALE</div>
+            <h1 class="hero-title">VIRAL HUMAN HAIR<br>WIGS</h1>
+            <p class="hero-desc">Up to 70% OFF on HD Lace Front Wigs & Glueless Wigs. Limited Time Only!</p>
+            <a href="wig-category.html" class="hero-btn">SHOP BLACK FRIDAY DEALS</a>
+        </div>
+    </section>
+
+ <!-- 第一行：假发行 -->
+<section class="section-container" style="margin-top: 50px;">
+    <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <!-- 标题绝对居中 -->
+        <h2 class="section-title" style="margin: 0; text-align: center;">FEATURED PRODUCTS</h2>
+        <!-- View All 靠右对齐，不影响标题居中 -->
+        <a href="wig-category.html" style="position: absolute; right: 0; font-size: 14px; color: #111; font-weight: 600; text-decoration: none;">View All →</a>
+    </div>
+    <div class="marquee-container" id="wig-marquee"></div>
+</section>
+
+<!-- 第二行：杂货行 -->
+<section class="section-container">
+    <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <h2 class="section-title" style="margin: 0; text-align: center;">GROCERY & WHOLESALE</h2>
+        <a href="grocery.html" style="position: absolute; right: 0; font-size: 14px; color: #111; font-weight: 600; text-decoration: none;">View All →</a>
+    </div>
+    <div class="marquee-container" id="grocery-marquee"></div>
+</section>
+
+    <!-- 购物车抽屉 -->
+    <div class="cart-drawer-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <span>Your Shopping Cart</span>
+            <button class="close-cart" onclick="toggleCartDrawer()">&times;</button>
+        </div>
+        <div class="cart-items-list" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <!-- 原价小计 -->
+            <div class="cart-total">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" style="text-decoration: line-through; color: #888; font-size: 14px;">$0.00</span>
+            </div>
+        
+            <!-- 💡 阶梯折后价显示区 -->
+            <div class="cart-total discount-row" style="margin-top: 6px;">
+                <span style="font-weight: 800; color: #e63946;">Final Price (Tier Discount):</span>
+                <span id="cart-discounted-price" style="font-weight: 800; color: #e63946; font-size: 18px;">$0.00</span>
+            </div>
+        
+            <!-- 折扣提示标签 -->
+            <div id="cart-discount-notice" style="font-size: 12px; color: #25D366; text-align: right; margin-bottom: 12px; font-weight: 600;">
+                Order $100+ for 4% OFF!
+            </div>
+        
+            <!-- 💡 修改后的 WhatsApp 联系结算按钮 -->
+            <a href="https://wa.me/86111111" target="_blank" class="checkout-btn whatsapp-btn">
+                Contact WhatsApp:<br>
+                <strong style="font-size: 15px; letter-spacing: 0.5px;">+86 18339686015/+86 17744478917</strong>
+            </a>
+        </div>
+    </div>
+
+    <script src="../js/database.js"></script>
+    <script src="../js/cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const products = getAllProducts();
+
+            const wigRow = document.getElementById('wig-marquee');
+            const wigProducts = products.filter(p => p.category === 'wig');
+            wigRow.innerHTML = wigProducts.map(p => renderCard(p, 'product.html')).join('');
+
+            const groceryRow = document.getElementById('grocery-marquee');
+            const groceryProducts = products.filter(p => p.category === 'grocery');
+            groceryRow.innerHTML = groceryProducts.map(p => renderCard(p, 'grocery.html')).join('');
+
+            setupAutoScroll(wigRow);
+            setupAutoScroll(groceryRow);
+        });
+
+        function renderCard(p, pageName) {
+            const defaultSize = p.sizes[0];
+            return `
+                <div class="product-card">
+                    <div onclick="location.href='${pageName}?id=${p.id}'">
+                        <img src="${p.images[0]}" alt="${p.name}">
+                        <div style="font-size:11px; color:#777; text-transform:uppercase;">${p.category}</div>
+                        <div class="product-card-title">${p.name}</div>
+                        <div>
+                            <span class="card-price">$${defaultSize.price.toFixed(2)}</span>
+                            <span class="card-original">$${defaultSize.originalPrice.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart({
+                        id: '${p.id}',
+                        name: '${p.name}',
+                        price: ${defaultSize.price},
+                        size: '${defaultSize.name}',
+                        img: '${p.images[0]}'
+                    })">Add to Cart</button>
+                </div>
+            `;
+        }
+
+        function setupAutoScroll(container) {
+            let isHovered = false;
+            container.addEventListener('mouseenter', () => isHovered = true);
+            container.addEventListener('mouseleave', () => isHovered = false);
+
+            setInterval(() => {
+                if (!isHovered) {
+                    container.scrollLeft += 1;
+                    if (container.scrollLeft >= (container.scrollWidth - container.clientWidth)) {
+                        container.scrollLeft = 0;
+                    }
+                }
+            }, 30);
+        }
+    </script>
+</body>
+</html>
