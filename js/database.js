@@ -116,6 +116,37 @@ const productDatabase = {
       { name: "22 22 22 22", price: 69.10, originalPrice: 136.01, weight: "0.44 kg" }
     ]
   },
+    "wigs-13": {
+    id: "wigs-13",
+    category: "wig",
+    subCategory: "100%", // 子类目: 100% 系列
+    name: '30 34 Inch 15A 100% human hair Long Bone Straight  Human Hair Bundles - Real Virgin  Hair Extensions, Double Weft Soft Smooth Weaving Bundles For Women',
+    description: "Crafted from 70% premium Brazilian human hair, this wig offers unmatched softness and natural",
+    density: "Bundle-FTST", // 假发专属属性: 密度
+    laceArea: "1/3/4", // 假发专属属性: 蕾丝面积
+    images: [
+      "../images/wig-p13/p1.jpg",
+      "../images/wig-p13/p2.jpg",
+      "../images/wig-p13/p3.jpg",
+      "../images/wig-p13/p4.jpg",
+      "../images/wig-p13/p5.jpg",
+      "../images/wig-p13/p6.jpg",
+      "../images/wig-p13/p7.jpg",
+      "../images/wig-p13/p8.jpg",
+      "../images/wig-p13/p9.jpg",
+        "../images/wig-p13/p10.jpg",
+        "../images/wig-p13/p11.jpg"
+    ],
+    sizes: [
+      { name: "12 Inch", price: 35.00, originalPrice: 65, weight: "0.15 kg" },
+      { name: "14 Inch", price: 39.23, originalPrice: 80.31, weight: "0.16 kg" },
+      { name: "16 Inch", price: 45.38, originalPrice: 88.41, weight: "0.18 kg" },
+      { name: "18 Inch", price: 48.46, originalPrice: 92.03, weight: "0.20 kg" },
+      { name: "20 Inch", price: 57.69, originalPrice: 116.92, weight: "0.24 kg" },
+      { name: "22 Inch", price: 65.38, originalPrice: 130.52, weight: "0.25 kg" },
+      { name: "24 Inch", price: 77.69, originalPrice: 166.72, weight: "0.27 kg" },   
+    ]
+  },
   "wigs-3": {
     id: "wigs-3",
     category: "wig",
