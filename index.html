@@ -95,8 +95,25 @@
         </div>
     </div>
 
-    <script src="js/database.js"></script>
-    <script src="js/cart.js"></script>
+<script src="js/database.js"></script>
+<script src="js/cart.js"></script>
+
+<!-- 💡 专属根目录的路径自动修正脚本（只对最外层 index.html 生效，不影响其他页面） -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 自动查找并修正所有商品对象中的图片路径，把 ../ 去掉
+        if (typeof allProducts !== 'undefined' && Array.isArray(allProducts)) {
+            allProducts.forEach(p => { if (p.image) p.image = p.image.replace('../', ''); });
+        }
+        if (typeof products !== 'undefined' && Array.isArray(products)) {
+            products.forEach(p => { if (p.image) p.image = p.image.replace('../', ''); });
+        }
+        // 如果页面是通过函数渲染的，也可以在这里触发一次重新渲染
+        if (typeof renderProducts === 'function') {
+            renderProducts();
+        }
+    });
+</script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const products = getAllProducts();
