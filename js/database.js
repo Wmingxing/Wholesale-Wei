@@ -143,7 +143,11 @@ const productDatabase = {
       { name: "18 Inch", price: 48.46, originalPrice: 92.03, weight: "0.20 kg" },
       { name: "20 Inch", price: 57.69, originalPrice: 116.92, weight: "0.24 kg" },
       { name: "22 Inch", price: 65.38, originalPrice: 130.52, weight: "0.25 kg" },
-      { name: "24 Inch", price: 77.69, originalPrice: 166.72, weight: "0.27 kg" },   
+      { name: "24 Inch", price: 77.69, originalPrice: 166.72, weight: "0.27 kg" },
+        { name: "26 Inch", price: 88.46, originalPrice: 180.03, weight: "0.30 kg" },
+      { name: "28 Inch", price: 99.69, originalPrice: 200.92, weight: "0.34 kg" },
+      { name: "30 Inch", price: 105.38, originalPrice: 220.52, weight: "0.38 kg" },
+      { name: "32 Inch", price: 110.69, originalPrice: 240.72, weight: "0.40 kg" },
     ]
   },
   "wigs-3": {
@@ -651,6 +655,74 @@ const productDatabase = {
       { name: "40 Inch", price: 348.00, originalPrice: 566.14, weight: "0.48 kg" }
     ]
   },
+    "wigs-14": {
+    id: "wigs-14",
+    category: "wig",
+    subCategory: "100%", // 子类目: 100% 系列
+    name: "[LIVE 13x4 Combo: 2 Women's Human HairWigs] 13x4  HD Transparent Lace Front Wigs,22-30 Inch 2-Pack Buy 1 Get 1 Free, Deep Wave, Body Wave & Straight, withBaby Hair, 180% Density Natural Black",
+    description: "Crafted from 100% premium Brazilian human hair, this wig offers unmatched softness and a natural hairline.",
+    density: "180% Density", // 假发专属属性: 密度
+    laceArea: "13x4/5x5 HD Lace ", // 假发专属属性: 蕾丝面积
+    images: [
+      "../images/wig-p14/p1.jpg",
+      "../images/wig-p14/p2.jpg",
+      "../images/wig-p14/p3.jpg",
+      "../images/wig-p14/p4.jpg",
+      "../images/wig-p14/p5.jpg",
+      "../images/wig-p14/p6.jpg",
+      "../images/wig-p14/p7.jpg"
+    ],
+    sizes: [
+      { name: "DW+DW4/27-20+20", price: 100.99, originalPrice: 200.18, weight: "0.48 kg" },
+      { name: "BW+BW99J-20+20", price: 100.99, originalPrice: 200.25, weight: "0.50 kg" },
+      { name: "BW+BW4/27-20+20", price: 100.99, originalPrice: 200.28, weight: "0.48 kg" },
+      { name: "BW+DW-20+20", price: 100.99, originalPrice: 200.50, weight: "0.50 kg" },
+      { name: "BW+ST-20+20", price: 100.99, originalPrice: 208.52, weight: "0.48 kg" },
+      { name: "DW+BW99J-20+20", price: 100.99, originalPrice: 200.31, weight: "0.48 kg" },
+      { name: "DW+BW4/27-20+20", price: 100.99, originalPrice: 204.46, weight: "0.48 kg" },
+      { name: "22 Inch COMBO", price: 107.99, originalPrice: 241.99, weight: "0.56 kg" },
+      { name: "24 Inch COMBO", price: 117.99, originalPrice: 313.31, weight: "0.60 kg" },
+      { name: "26 Inch COMBO", price: 129.99, originalPrice: 331.24, weight: "0.66 kg" },
+      { name: "28 Inch COMBO", price: 145.99, originalPrice: 294.47, weight: "0.70 kg" },
+      { name: "30 Inch COMBO", price: 153.99, originalPrice: 412.56, weight: "0.72 kg" }
+    ]
+  },
+  "wigs-15": {
+    id: "wigs-15",
+    category: "wig",
+    subCategory: "100%", // 子类目: 100% 系列
+    name: "[LIVE Combo: 2 Women’s Human Hair Wigs] 13x4 HD Transparent Lace Front Wigs, 22-30 Inch 2-Pack Buy 1 Get 1 Free, Body Wave, Deep Wave & Straight, Pre-Plucked with Baby Hair, 180% Density Natural Black",
+    description: "Crafted from 100% premium Brazilian human hair, this wig offers unmatched softness and a natural hairline.",
+    density: "180% Density", // 假发专属属性: 密度
+    laceArea: "13x4/5x5 HD Lace ", // 假发专属属性: 蕾丝面积
+    images: [
+      "../images/wig-p15/p1.jpg",
+      "../images/wig-p15/p2.jpg",
+      "../images/wig-p15/p3.jpg",
+      "../images/wig-p15/p4.jpg",
+      "../images/wig-p15/p5.jpg",
+      "../images/wig-p15/p6.jpg",
+      "../images/wig-p15/p7.jpg",
+      "../images/wig-p15/p8.jpg"
+    ],
+    sizes: [
+      { name: "DW+BW4/27-20+20", price: 110.99, originalPrice: 200.18, weight: "0.48 kg" },
+      { name: "DW+BW-20+20", price: 110.99, originalPrice: 200.25, weight: "0.50 kg" },
+      { name: "DW+BW4/27-20+20", price: 110.99, originalPrice: 200.28, weight: "0.48 kg" },
+      { name: "DW+DW-20+20", price: 110.99, originalPrice: 200.50, weight: "0.50 kg" },
+      { name: "BW+BW99J-20+20", price: 110.99, originalPrice: 200.25, weight: "0.50 kg" },
+      { name: "BW+BW4/27-20+20", price: 110.99, originalPrice: 200.28, weight: "0.48 kg" },
+      { name: "BW+DW-20+20", price: 110.99, originalPrice: 200.50, weight: "0.50 kg" },
+      { name: "BW+ST-20+20", price: 110.99, originalPrice: 208.52, weight: "0.48 kg" },
+      { name: "DW+BW99J-20+20", price: 110.99, originalPrice: 200.31, weight: "0.48 kg" },
+      { name: "DW+BW4/27-20+20", price: 110.99, originalPrice: 204.46, weight: "0.48 kg" },
+      { name: "22 Inch COMBO", price: 118.99, originalPrice: 241.99, weight: "0.56 kg" },
+      { name: "24 Inch COMBO", price: 129.99, originalPrice: 260.31, weight: "0.60 kg" },
+      { name: "26 Inch COMBO", price: 142.99, originalPrice: 281.24, weight: "0.66 kg" },
+      { name: "28 Inch COMBO", price: 160.99, originalPrice: 330.47, weight: "0.70 kg" },
+      { name: "30 Inch COMBO", price: 169.99, originalPrice: 412.56, weight: "0.72 kg" }
+    ]
+  },
     "grocery-1": {
         id: "grocery-1",
         category: "grocery",
@@ -754,7 +826,7 @@ function getProductById(id) {
     return productDatabase[id] || null;
 }
 // 1. 在这里集中写入你想设为畅销产品的 ID 即可！
-const bestSellerIds = ["wigs-1", "wigs-3", "grocery-1"]; 
+const bestSellerIds = ["wigs-14", "wigs-15", "grocery-1"]; 
 
 // 2. 提供一个获取畅销商品的辅助函数
 function getBestSellers() {
