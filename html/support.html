@@ -71,6 +71,24 @@
               </div>
           </div>
         </div>
+        <div class="support-section"">
+            <h2>4.Customer Support & Message</h2>
+            <p style="font-size: 15px; color: #444; line-height: 1.5; margin-bottom: 20px;">
+                Have any questions regarding wholesale, customization, or orders? Please feel free to send us a message:
+            </p>
+                        
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 14px; font-weight: 600; color: #222; display: block; margin-bottom: 6px;">Your Name / Email / WhatsApp:</label>
+                <input type="text" id="sup-contact" placeholder="e.g., +1 555-0199 or email@gmail.com" style="width: 100%; padding: 10px 12px; font-size: 14px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 14px; font-weight: 600; color: #222; display: block; margin-bottom: 6px;">Message:</label>
+                <textarea id="sup-message" rows="4" placeholder="Please enter your specific requirements..." style="width: 100%; padding: 10px 12px; font-size: 14px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px;"></textarea>
+            </div>
+            
+            <button onclick="submitSupportMsg()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Send!!!</button>
+        </div>
     </div>
 
     <footer><p>&copy; 2026 MY STORE. All Rights Reserved.</p></footer>
@@ -107,6 +125,35 @@
             </a>
         </div>
     </div>
+
+    <!-- 在 support.html 的合适位置加入以下留言表单 -->
+
+
+<script src="../js/tracker.js"></script>
+<script>
+    function submitSupportMsg() {
+        const contact = document.getElementById('sup-contact').value.trim();
+        const message = document.getElementById('sup-message').value.trim();
+
+        if(!contact || !message) {
+            alert('请填写联系方式和留言内容！');
+            return;
+        }
+
+        Tracker.saveSupportMessage({
+            contact: contact,
+            message: message,
+            time: new Date().toLocaleString()
+        });
+
+        alert('留言提交成功！我们会尽快与您联系。');
+        document.getElementById('sup-contact').value = '';
+        document.getElementById('sup-message').value = '';
+    }
+</script>
+
+
+
     <script src="../js/database.js"></script>
     <script src="../js/cart.js"></script>
 </body>
