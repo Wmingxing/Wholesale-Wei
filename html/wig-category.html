@@ -31,7 +31,7 @@
         <!-- 子类目筛选与局部搜索栏 -->
         <div style="display:flex; justify-content:space-between; margin:20px 0; align-items:center; flex-wrap:wrap; gap:10px;">
             <div style="display:flex; gap:10px;">
-               <button onclick="filterWigs('all')" style="padding:8px 16px; cursor:pointer;">All Wigs</button>
+                <button onclick="filterWigs('all')" style="padding:8px 16px; cursor:pointer;">All Wigs</button>
                 <button onclick="filterWigs('100%')" style="padding:8px 16px; cursor:pointer;">100% Human Hair(Ship From China 7days)</button>
                 <button onclick="filterWigs('70%')" style="padding:8px 16px; cursor:pointer;">70% Human Hair(Ship From New York/China)</button>
                 <button onclick="filterWigs('50%')" style="padding:8px 16px; cursor:pointer;">50% Human Hair(Ship From New York 2-4days)</button>
@@ -81,6 +81,7 @@
 
     <script src="../js/database.js"></script>
     <script src="../js/cart.js"></script>
+    <script src="../js/tracker.js"></script>
     <script>
         let currentSub = 'all';
         let currentKeyword = '';
@@ -120,7 +121,13 @@
                 return `
                     <div class="product-card" style="min-width:auto;">
                         <div onclick="location.href='product.html?id=${p.id}'">
-                            <img src="${p.images[0]}" style="width:100%; height:200px; object-fit:contain;">
+                            <div style="position: relative; width: 100%; height: 200px; background: #f9f9f9;">
+                            <img src="${p.images[0]}" style="width:100%; height:100%; object-fit:contain;">
+                            <!-- 💡 右上角悬浮爱心按钮（加上 event.stopPropagation() 防止点击时触发卡片跳转） -->
+                                <button onclick="event.stopPropagation(); handleCardLike('${p.id}')" style="position: absolute; top: -10px; right: -10px; background: rgba(255, 255, 255, 0.95); color: #ff4d4f; border: 1px solid #ff4d4f; padding: 3px 10px; border-radius: 12px; cursor: pointer; font-size: 11px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 3px; z-index: 5;">
+                                    ❤️ <span id="like-count-${p.id}">0</span>
+                                </button>
+                            </div>
                             <div style="font-size:11px; color:#666;">${p.density} | ${p.laceArea}</div>
                             <div class="product-card-title">${p.name}</div>
                             <div class="card-price">$${sz.price.toFixed(2)}</div>
@@ -140,6 +147,49 @@
             currentPage = page;
             renderWigs();
         }
+    </script>
+    <script>
+        // 💡 商品列表页点赞与初始化脚本
+document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof Tracker !== 'undefined') {
+        // 获取页面上所有的点赞标签，自动从云端拉取最新点赞数
+        const likeElements = document.querySelectorAll('[id^="like-count-"]');
+        for (let el of likeElements) {
+            // 从元素 ID 中提取出 productId (例如 like-count-wigs-1 提取出 wigs-1)
+            const pId = el.id.replace('like-count-', '');
+            const likes = await Tracker.getLikes(pId);
+            el.innerText = likes;
+        }
+    }
+});
+
+// 💡 独立的多商品点赞处理函数（带防冲突和阻止事件冒泡设计）
+async function handleCardLike(productId) {
+    if (typeof Tracker !== 'undefined') {
+        // 切换云端点赞状态并返回最新点赞数
+        const newCount = await Tracker.toggleLike(productId);
+        
+        // 精准更新当前商品的点赞数字
+        const countSpan = document.getElementById(`like-count-${productId}`);
+        if (countSpan) {
+            countSpan.innerText = newCount;
+        }
+        
+        // 顶部轻量提示
+        showToast('❤️ Thank you for liking!');
+    }
+}
+
+// 辅助函数：页面顶部轻量 Toast 提示
+function showToast(message) {
+    let toast = document.createElement('div');
+    toast.innerText = message;
+    toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#28a745; color:white; padding:10px 20px; border-radius:4px; z-index:9999; font-weight:600; box-shadow:0 4px 10px rgba(0,0,0,0.2);";
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.remove();
+    }, 2500);
+}
     </script>
 </body>
 </html>
