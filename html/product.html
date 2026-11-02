@@ -12,7 +12,36 @@
         .thumbs { display: flex; flex-direction: column; gap: 10px; }
         .thumbs img { width: 70px; height: 70px; object-fit: cover; cursor: pointer; border: 1px solid #ddd; opacity: 0.6; }
         .thumbs img.active { border-color: #e63946; opacity: 1; }
-        .main-img img { width: 100%; height: 450px; object-fit: contain; background: #f9f9f9; border: 1px solid #eee; }
+        
+        /* 💡 关键：主图容器相对定位 */
+        .main-img { position: relative; width: 100%; }
+        .main-img img { width: 100%; height: 450px; object-fit: contain; background: #f9f9f9; border: 1px solid #eee; display: block; }
+        
+        /* 💡 调整到和图片右上角对齐的悬浮 Like 按钮 */
+        .floating-like-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #ff4d4f;
+            border: 1px solid #ff4d4f;
+            padding: 5px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 10;
+        }
+        .floating-like-btn:hover {
+            background: #fff4f4;
+            transform: scale(1.05);
+        }
+
         .size-btn { padding: 10px 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-weight: 600; }
         .size-btn.active { background: #111; color: #fff; border-color: #111; }
     </style>
@@ -30,10 +59,13 @@
     </div>
 
     <main class="detail-container">
-        <!-- 左侧图片画廊 -->
+        <!-- 左侧图片画廊 (含右上角悬浮 Like 按钮) -->
         <div class="gallery">
             <div class="thumbs" id="thumbs-box"></div>
-            <div class="main-img"><img id="main-image" src=""></div>
+            <div class="main-img">
+                <img id="main-image" src="">
+                
+            </div>
         </div>
 
         <!-- 右侧信息 -->
@@ -46,8 +78,14 @@
                 <strong>Lace Area:</strong> <span id="p-lace"></span>
             </div>
 
-            <div style="font-size:30px; font-weight:790; color:#e63946; margin-bottom:15px;">
-                <span id="p-price">$0.00</span> <span id="p-orig" style="font-size:16px; color:#888; text-decoration:line-through; margin-left:10px;">$0.00</span>
+            <div style="font-size:30px; font-weight:790; color:#e63946; margin-bottom:15px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div>
+                    <span id="p-price">$0.00</span> 
+                    <span id="p-orig" style="font-size:16px; color:#888; text-decoration:line-through; margin-left:6px;">$0.00</span>
+                </div>
+                <button onclick="openOfferModal()" style="background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3); transition: all 0.2s;">
+                    📉 Too High? Enter Your Price!!!
+                </button>
             </div>
 
             <!-- 重量标签 -->
@@ -75,24 +113,20 @@
         <div class="cart-header"><span>Your Shopping Cart</span><button class="close-cart" onclick="toggleCartDrawer()">&times;</button></div>
         <div class="cart-items-list" id="cart-items-container"></div>
         <div class="cart-footer">
-            <!-- 原价小计 -->
             <div class="cart-total">
                 <span>Subtotal</span>
                 <span id="cart-subtotal" style="text-decoration: line-through; color: #888; font-size: 14px;">$0.00</span>
             </div>
         
-            <!-- 💡 阶梯折后价显示区 -->
             <div class="cart-total discount-row" style="margin-top: 6px;">
                 <span style="font-weight: 800; color: #e63946;">Final Price (Tier Discount):</span>
                 <span id="cart-discounted-price" style="font-weight: 800; color: #e63946; font-size: 18px;">$0.00</span>
             </div>
         
-            <!-- 折扣提示标签 -->
             <div id="cart-discount-notice" style="font-size: 12px; color: #25D366; text-align: right; margin-bottom: 12px; font-weight: 600;">
                 Order $100+ for 4% OFF!
             </div>
         
-            <!-- 💡 修改后的 WhatsApp 联系结算按钮 -->
             <a href="https://wa.me/86111111" target="_blank" class="checkout-btn whatsapp-btn">
                 Contact WhatsApp:<br>
                 <strong style="font-size: 15px; letter-spacing: 0.5px;">+86 18339686015/+86 17744478917</strong>
@@ -100,63 +134,140 @@
         </div>
     </div>
 
-    <script src="../js/database.js"></script>
-    <script src="../js/cart.js"></script>
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const product = getProductById(params.get('id') || 'wigs-1');
-        let selectedSizeIdx = 0;
+<!-- 降价申请弹窗 (全英文精简版) -->
+<div id="offer-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:25px; border-radius:8px; width:340px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <h3 style="margin-top:0; color:#333;">Request Lower Price</h3>
+        <p style="font-size:12px; color:#666; margin-bottom:12px;">Submit your target size and price, and we will contact you soon!</p>
+        
+        <div style="margin-bottom: 12px;">
+            <label style="font-size:13px; font-weight:bold; display:block; margin-bottom:4px;">Size (inch) & Target Price ($):</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <div style="position: relative; width: 45%;">
+                    <input type="number" id="modal-size-input" placeholder="e.g. 18" style="width: 100%; padding: 8px 35px 8px 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-weight: bold;">
+                    <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #666; pointer-events: none;">inch</span>
+                </div>
+                <input type="number" id="target-price" placeholder="e.g. 65.00" style="width: 55%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+        </div>
+        
+        <label style="font-size:13px; font-weight:bold; display:block; margin-bottom:4px;">Your Contact (WhatsApp / Email):</label>
+        <input type="text" id="user-contact" placeholder="Enter phone or email" style="width:100%; margin-bottom:18px; padding:8px; box-sizing:border-box; border:1px solid #ccc; border-radius:4px;">
+        
+        <div style="text-align:right;">
+            <button onclick="closeOfferModal()" style="background:#ccc; border:none; padding:8px 14px; border-radius:4px; cursor:pointer; font-weight:600; margin-right:6px;">Cancel</button>
+            <button onclick="submitOffer()" style="background:#28a745; color:white; border:none; padding:8px 14px; border-radius:4px; cursor:pointer; font-weight:600;">Submit</button>
+        </div>
+    </div>
+</div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!product) return;
+<script src="../js/tracker.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id') || 'unknown-product';
+    function openOfferModal() {
+        document.getElementById('offer-modal').style.display = 'flex';
+    }
+    function closeOfferModal() {
+        document.getElementById('offer-modal').style.display = 'none';
+    }
 
-            document.getElementById('p-title').innerText = product.name;
-            document.getElementById('p-desc').innerText = product.description;
-            document.getElementById('p-density').innerText = product.density;
-            document.getElementById('p-lace').innerText = product.laceArea;
-
-            document.getElementById('main-image').src = product.images[0];
-            document.getElementById('thumbs-box').innerHTML = product.images.map((img, i) => `
-                <img src="${img}" class="${i===0?'active':''}" onclick="switchImg('${img}', ${i})">
-            `).join('');
-
-            document.getElementById('sizes-box').innerHTML = product.sizes.map((sz, i) => `
-                <button onclick="selectSize(${i})" class="size-btn ${i===0?'active':''}">${sz.name}</button>
-            `).join('');
-
-            updateSizeInfo();
-        });
-
-        function switchImg(src, idx) {
-            document.getElementById('main-image').src = src;
-            document.querySelectorAll('.thumbs img').forEach((img, i) => img.classList.toggle('active', i === idx));
+    async function submitOffer() {
+        const size = document.getElementById('modal-size-input').value;
+        const price = document.getElementById('target-price').value;
+        const contact = document.getElementById('user-contact').value;
+        
+        if(!size || !price || !contact) {
+            alert('Please fill in all fields!');
+            return;
         }
-
-        function selectSize(idx) {
-            selectedSizeIdx = idx;
-            document.querySelectorAll('.size-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
-            updateSizeInfo();
-        }
-
-        function updateSizeInfo() {
-            const sz = product.sizes[selectedSizeIdx];
-            document.getElementById('p-price').innerText = `$${sz.price.toFixed(2)}`;
-            document.getElementById('p-orig').innerText = `$${sz.originalPrice.toFixed(2)}`;
-            document.getElementById('p-weight').innerText = sz.weight;
-        }
-
-        function handleAddToCart() {
-            const sz = product.sizes[selectedSizeIdx];
-            const qty = parseInt(document.getElementById('p-qty').value) || 1;
-            addToCart({
-                id: product.id,
-                name: product.name,
-                price: sz.price,
-                size: sz.name,
-                quantity: qty,
-                img: product.images[0]
+        
+        if (typeof Tracker !== 'undefined') {
+            await Tracker.savePriceOffer({
+                productId: productId,
+                size: size + ' inch',
+                targetPrice: price,
+                contact: contact,
+                time: new Date().toLocaleString()
             });
+            
+            document.getElementById('modal-size-input').value = '';
+            document.getElementById('target-price').value = '';
+            document.getElementById('user-contact').value = '';
+            
+            closeOfferModal();
+            showToast('Offer submitted! We will contact you soon.');
         }
-    </script>
+    }
+
+    function showToast(message) {
+        let toast = document.createElement('div');
+        toast.innerText = message;
+        toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#28a745; color:white; padding:10px 20px; border-radius:4px; z-index:9999; font-weight:600; box-shadow:0 4px 10px rgba(0,0,0,0.2);";
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, 2500);
+    }
+</script>
+
+<script src="../js/database.js"></script>
+<script src="../js/cart.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const product = getProductById(params.get('id') || 'wigs-1');
+    let selectedSizeIdx = 0;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!product) return;
+
+        document.getElementById('p-title').innerText = product.name;
+        document.getElementById('p-desc').innerText = product.description;
+        document.getElementById('p-density').innerText = product.density;
+        document.getElementById('p-lace').innerText = product.laceArea;
+
+        document.getElementById('main-image').src = product.images[0];
+        document.getElementById('thumbs-box').innerHTML = product.images.map((img, i) => `
+            <img src="${img}" class="${i===0?'active':''}" onclick="switchImg('${img}', ${i})">
+        `).join('');
+
+        document.getElementById('sizes-box').innerHTML = product.sizes.map((sz, i) => `
+            <button onclick="selectSize(${i})" class="size-btn ${i===0?'active':''}">${sz.name}</button>
+        `).join('');
+
+        updateSizeInfo();
+    });
+
+    function switchImg(src, idx) {
+        document.getElementById('main-image').src = src;
+        document.querySelectorAll('.thumbs img').forEach((img, i) => img.classList.toggle('active', i === idx));
+    }
+
+    function selectSize(idx) {
+        selectedSizeIdx = idx;
+        document.querySelectorAll('.size-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+        updateSizeInfo();
+    }
+
+    function updateSizeInfo() {
+        const sz = product.sizes[selectedSizeIdx];
+        document.getElementById('p-price').innerText = `$${sz.price.toFixed(2)}`;
+        document.getElementById('p-orig').innerText = `$${sz.originalPrice.toFixed(2)}`;
+        document.getElementById('p-weight').innerText = sz.weight;
+    }
+
+    function handleAddToCart() {
+        const sz = product.sizes[selectedSizeIdx];
+        const qty = parseInt(document.getElementById('p-qty').value) || 1;
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: sz.price,
+            size: sz.name,
+            quantity: qty,
+            img: product.images[0]
+        });
+    }
+</script>
 </body>
 </html>
