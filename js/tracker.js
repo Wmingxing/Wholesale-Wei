@@ -1,8 +1,8 @@
 // ==========================================
 // 💡 请在这里填入你从 JSONBin.io 申请到的配置信息
 // ==========================================
-// const JSONBIN_BIN_ID = "6ae8774bac6210605a659a90"; 
-// const JSONBIN_API_KEY = "$2a$10$FdmhvOggY93YTVfjWsj4h.hXVCUwTuI3spLOf5L86ZyY6tYy3OJMa";
+const JSONBIN_BIN_ID = "6ae8774bac6210605a659a90"; 
+const JSONBIN_API_KEY = "$2a$10$FdmhvOggY93YTVfjWsj4h.hXVCUwTuI3spLOf5L86ZyY6tYy3OJMa";
 
 const Tracker = {
     // 1. 从云端获取所有数据
