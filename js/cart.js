@@ -72,6 +72,9 @@ function updateCartUI() {
         if (cartSubtotalElem) cartSubtotalElem.innerText = `$0.00`;
         if (cartDiscountedPriceElem) cartDiscountedPriceElem.innerText = `$0.00`;
         if (cartDiscountNoticeElem) cartDiscountNoticeElem.innerText = `Order $100+ for 4% OFF!`;
+        
+        // 购物车为空时，将 PayPal 链接和金额重置为 0
+        updatePayPalLink(0);
         return;
     }
 
@@ -119,6 +122,23 @@ function updateCartUI() {
     if (cartSubtotalElem) cartSubtotalElem.innerText = `$${subtotal.toFixed(2)}`;
     if (cartDiscountedPriceElem) cartDiscountedPriceElem.innerText = `$${discountedPrice.toFixed(2)}`;
     if (cartDiscountNoticeElem) cartDiscountNoticeElem.innerText = noticeText;
+
+    // 💡 关键：每次计算出阶梯折扣的最终价（discountedPrice）后，立即自动刷新 PayPal 按钮金额与链接！
+    updatePayPalLink(discountedPrice);
+}
+
+// 动态更新 PayPal 支付按钮的金额与链接
+function updatePayPalLink(finalPrice) {
+    const paypalBtn = document.getElementById('paypal-checkout-btn');
+    const amountText = document.getElementById('paypal-amount-text');
+    
+    if (paypalBtn && amountText) {
+        // 1. 更新按钮上显示的文字和金额
+        amountText.innerText = `Total: $${finalPrice.toFixed(2)} (Secure Checkout)`;
+        
+        // 2. 动态修改 PayPal.Me 链接，自动带上金额
+        paypalBtn.href = `https://paypal.me/superwei001/${finalPrice.toFixed(2)}`;
+    }
 }
 
 // 页面加载完成后自动刷新购物车状态（保持角标和总价同步）
